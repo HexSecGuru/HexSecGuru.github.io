@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' https:; connect-src 'self';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+  <title>HexSec Terminal | Advanced Cybersecurity Portfolio</title>
+  <style>
+    :root {
+      --primary-color: #33FF33;
+      --secondary-color: #00FFFF;
+      --accent-color: #FF00FF;
+      --bg-color: #000;
+      --terminal-bg: #111;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--primary-color);
+      font-family: 'Courier New', monospace;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Advanced Matrix Background */
+    .matrix-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.15;
+    }
+
+    /* Enhanced Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      padding: 1rem;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--primary-color);
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--primary-color);
+      text-decoration: none;
+      margin: 0 1rem;
+      position: relative;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--secondary-color);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    nav a:hover {
+      color: var(--secondary-color);
+      text-shadow: 0 0 8px var(--secondary-color);
+    }
+
+    /* Main Content Sections */
+    .section {
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Interactive Terminal */
+    .terminal {
+      width: 90%;
+      max-width: 800px;
+      background: var(--terminal-bg);
+      border-radius: 10px;
+      padding: 1.5rem;
+      box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+      margin: 2rem auto;
+      height: 400px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--primary-color);
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .terminal-button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--primary-color);
+      opacity: 0.7;
+    }
+
+    .terminal-title {
+      color: var(--secondary-color);
+      font-size: 0.9rem;
+    }
+
+    .terminal-content {
+      font-family: 'Courier New', monospace;
+      line-height: 1.5;
+    }
+
+    .terminal-prompt {
+      display: flex;
+      align-items: center;
+      margin: 0.5rem 0;
+    }
+
+    .terminal-prompt::before {
+      content: '>';
+      color: var(--secondary-color);
+      margin-right: 0.5rem;
+    }
+
+    .terminal-input {
+      background: none;
+      border: none;
+      color: var(--primary-color);
+      font-family: inherit;
+      font-size: inherit;
+      width: 100%;
+      outline: none;
+    }
+
+    /* Skill Bars with Glowing Effect */
+    .skill-bar {
+      width: 100%;
+      height: 25px;
+      background: rgba(51, 255, 51, 0.1);
+      border-radius: 12px;
+      margin: 1rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: var(--primary-color);
+      border-radius: 12px;
+      position: relative;
+      animation: fillSkill 1.5s ease forwards;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    @keyframes fillSkill {
+      from { width: 0; }
+      to { width: var(--skill-percent); }
+    }
+
+    /* Footer with Social Links */
+    footer {
+      background: rgba(0, 0, 0, 0.9);
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--primary-color);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      color: var(--primary-color);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      color: var(--secondary-color);
+      transform: translateY(-3px);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0.5rem;
+      }
+
+      nav a {
+        font-size: 0.9rem;
+        margin: 0 0.5rem;
+      }
+
+      .terminal {
+        width: 95%;
+        height: 300px;
+      }
+
+      .section {
+        padding: 4rem 1rem;
+      }
+    }
+
+    /* Project Cards */
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+    }
+
+    .project-card {
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        padding: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(51, 255, 51, 0.3);
+    }
+
+    .project-tech {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    .project-tech span {
+        background: rgba(51, 255, 51, 0.1);
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.9rem;
+    }
+
+    .project-links {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .project-links a {
+        color: var(--secondary-color);
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+    }
+
+    .project-links a:hover {
+        color: var(--accent-color);
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        width: 100%;
+        max-width: 1200px;
+        padding: 2rem;
+    }
+
+    .skill-category {
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        padding: 1.5rem;
+    }
+
+    .skill-tooltip {
+        position: absolute;
+        background: var(--terminal-bg);
+        padding: 0.5rem;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .skill-progress:hover .skill-tooltip {
+        opacity: 1;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .glitch-title {
+        font-size: 4rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        position: relative;
+        text-shadow: 0.05em 0 0 var(--accent-color), 
+                    -0.05em -0.025em 0 var(--secondary-color);
+        animation: glitch 1s infinite;
+        margin-bottom: 2rem;
+    }
+
+    @keyframes glitch {
+        0% {
+            text-shadow: 0.05em 0 0 var(--accent-color), 
+                        -0.05em -0.025em 0 var(--secondary-color);
+        }
+        15% {
+            text-shadow: -0.05em -0.025em 0 var(--accent-color),
+                        0.025em 0.025em 0 var(--secondary-color);
+        }
+        49% {
+            text-shadow: -0.05em -0.025em 0 var(--accent-color),
+                        0.025em 0.025em 0 var(--secondary-color);
+        }
+        50% {
+            text-shadow: 0.025em 0.05em 0 var(--accent-color),
+                        0.05em 0 0 var(--secondary-color);
+        }
+        99% {
+            text-shadow: 0.025em 0.05em 0 var(--accent-color),
+                        0.05em 0 0 var(--secondary-color);
+        }
+        100% {
+            text-shadow: -0.025em 0 0 var(--accent-color),
+                        -0.025em -0.025em 0 var(--secondary-color);
+        }
+    }
+
+    /* Stats Section */
+    .skills-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .skill-item {
+        margin-bottom: 1.5rem;
+    }
+
+    .skill-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+    }
+
+    .skill-bar {
+        height: 10px;
+        background: rgba(51, 255, 51, 0.1);
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    .skill-fill {
+        height: 100%;
+        width: var(--fill);
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        animation: fillSkill 1.5s ease forwards;
+        box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    @keyframes fillSkill {
+        from { width: 0; }
+        to { width: var(--fill); }
+    }
+
+    .footer {
+        background: rgba(0, 0, 0, 0.9);
+        padding: 4rem 2rem 2rem;
+        border-top: 1px solid var(--primary-color);
+    }
+
+    .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .footer-section h3 {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .social-links a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+        color: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(51, 255, 51, 0.1);
+    }
+
+    .typing-text {
+        overflow: hidden;
+        border-right: .15em solid var(--primary-color);
+        white-space: nowrap;
+        margin: 0 auto;
+        letter-spacing: .15em;
+        animation: typing 3.5s steps(40, end),
+                   blink-caret .75s step-end infinite;
+    }
+
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: var(--primary-color) }
+    }
+
+    .timeline {
+        max-width: 800px;
+        margin: 2rem auto;
+        position: relative;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: 100%;
+        background: var(--primary-color);
+    }
+
+    .timeline-item {
+        width: 50%;
+        margin: 2rem 0;
+        position: relative;
+        padding: 0 2rem;
+    }
+
+    .timeline-item:nth-child(odd) {
+        left: 0;
+    }
+
+    .timeline-item:nth-child(even) {
+        left: 50%;
+    }
+
+    .timeline-content {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 1.5rem;
+        border: 1px solid var(--primary-color);
+        border-radius: 5px;
+        position: relative;
+    }
+
+    .timeline-content::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    .timeline-item:nth-child(odd) .timeline-content::before {
+        right: -62px;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content::before {
+        left: -62px;
+    }
+
+    .date {
+        color: var(--secondary-color);
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        display: block;
+    }
+
+    .welcome-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .welcome-content {
+        text-align: center;
+    }
+
+    .terminal-welcome {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 2rem;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(51, 255, 51, 0.3);
+    }
+
+    .terminal-welcome .terminal-line {
+        margin: 1rem 0;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease forwards;
+        color: var(--primary-color);
+        text-align: left;
+    }
+
+    .terminal-welcome .terminal-line:nth-child(2) { animation-delay: 1s; }
+    .terminal-welcome .terminal-line:nth-child(3) { animation-delay: 2s; }
+    .terminal-welcome .terminal-line:nth-child(4) { animation-delay: 3s; }
+
+    .enter-button {
+        margin-top: 2rem;
+        padding: 1rem 2rem;
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-family: 'Courier New', monospace;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        opacity: 0;
+        animation: fadeIn 0.5s ease forwards 4s;
+    }
+
+    .enter-button:hover {
+        background: var(--primary-color);
+        color: var(--bg-color);
+        box-shadow: 0 0 20px rgba(51, 255, 51, 0.5);
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Contact Form Styles */
+    .contact-container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .contact-form {
+        background: rgba(0, 0, 0, 0.8);
+        padding: 2rem;
+        border-radius: 10px;
+        border: 1px solid var(--primary-color);
+        box-shadow: 0 0 20px rgba(51, 255, 51, 0.2);
+    }
+
+    .form-group {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: none;
+        border-bottom: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-size: 1rem;
+        font-family: 'Courier New', monospace;
+        transition: all 0.3s ease;
+    }
+
+    .form-group textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-group label {
+        position: absolute;
+        left: 0;
+        top: 10px;
+        color: var(--primary-color);
+        transition: all 0.3s ease;
+        pointer-events: none;
+    }
+
+    .form-group input:focus ~ label,
+    .form-group input:valid ~ label,
+    .form-group textarea:focus ~ label,
+    .form-group textarea:valid ~ label {
+        top: -20px;
+        font-size: 0.8rem;
+        color: var(--secondary-color);
+    }
+
+    .submit-btn {
+        background: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 0 auto;
+    }
+
+    .submit-btn:hover {
+        background: var(--primary-color);
+        color: var(--bg-color);
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(51, 255, 51, 0.3);
+    }
+
+    /* GitHub Popup */
+    .github-popup {
+        position: fixed;
+        bottom: -100px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.95);
+        border: 2px solid var(--primary-color);
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 0 30px rgba(51, 255, 51, 0.3);
+        transition: all 0.5s ease;
+        opacity: 0;
+        z-index: 1000;
+    }
+
+    .github-btn {
+        background: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        padding: 1rem 2rem;
+        font-family: 'Courier New', monospace;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 5px;
+    }
+
+    .github-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: var(--primary-color);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s ease, height 0.3s ease;
+        z-index: -1;
+        border-radius: 50%;
+    }
+
+    .github-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .github-btn:hover {
+        color: var(--bg-color);
+        text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .github-popup p {
+        color: var(--secondary-color);
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        text-shadow: 0 0 8px var(--secondary-color);
+    }
+
+    .github-popup.show {
+        bottom: 20px;
+        opacity: 1;
+    }
+
+    .github-popup.fade-out {
+        animation: fadeOutAndSpin 1s ease forwards;
+    }
+
+    @keyframes fadeOutAndSpin {
+        0% {
+            opacity: 1;
+            transform: scale(1) rotate(0);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0) rotate(360deg);
+        }
+    }
+
+    .page-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-color);
+        z-index: 9999;
+        transform: scale(0);
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.5s ease;
+    }
+
+    .page-transition.active {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    /* Add these loading animation styles */
+    .loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    }
+
+    .loading-text {
+        color: var(--primary-color);
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        text-shadow: 0 0 10px var(--primary-color);
+        opacity: 0;
+        animation: pulseText 2s ease-in-out infinite;
+    }
+
+    .loading-bar {
+        width: 200px;
+        height: 4px;
+        background: rgba(51, 255, 51, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+    .loading-progress {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        animation: loadProgress 3s ease forwards;
+        box-shadow: 0 0 15px var(--primary-color);
+    }
+
+    @keyframes pulseText {
+        0% { opacity: 0.3; }
+        50% { opacity: 1; }
+        100% { opacity: 0.3; }
+    }
+
+    @keyframes loadProgress {
+        0% { width: 0; }
+        50% { width: 70%; }
+        100% { width: 100%; }
+    }
+
+    .loading-screen.fade-out {
+        animation: fadeOutScale 0.5s ease forwards;
+    }
+
+    @keyframes fadeOutScale {
+        to {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-text">System Loading...</div>
+    <div class="loading-bar">
+        <div class="loading-progress"></div>
+    </div>
+  </div>
+
+  <div class="welcome-screen" id="welcomeScreen">
+    <div class="welcome-content">
+        <div class="terminal-welcome">
+            <div class="terminal-line">> Initializing HexSec Terminal...</div>
+            <div class="terminal-line">> Running security checks...</div>
+            <div class="terminal-line">> Establishing secure connection...</div>
+            <div class="terminal-line">> Access granted.</div>
+            <button class="enter-button" id="enterButton">ENTER TERMINAL</button>
+        </div>
+    </div>
+  </div>
+
+  <div class="main-content" id="mainContent" style="display: none;">
+    <canvas id="matrix-background" class="matrix-background"></canvas>
+
+    <nav>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#terminal">Terminal</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </nav>
+
+    <section id="home" class="section">
+      <h1 class="glitch-text">Welcome to HexSec Terminal</h1>
+      <p class="typing-text"></p>
+    </section>
+
+    <section id="about" class="section">
+      <h2 class="glitch-text" data-text="About Me">About Me</h2>
+      <div class="terminal">
+          <div class="terminal-header">
+              <div class="terminal-buttons">
+                  <div class="terminal-button"></div>
+                  <div class="terminal-button"></div>
+                  <div class="terminal-button"></div>
+              </div>
+              <div class="terminal-title">whoami</div>
+          </div>
+          <div class="terminal-content">
+              <p>🎓 Aspiring Cybersecurity Professional</p>
+              <p>💻 Learning Programming & Security</p>
+              <p>🔒 Passionate about Ethical Hacking</p>
+              <p>🌱 Currently focusing on:</p>
+              <ul class="terminal-list">
+                  <li>Basic Network Security</li>
+                  <li>Python Programming</li>
+                  <li>Web Security Fundamentals</li>
+                  <li>CTF Challenges for Beginners</li>
+              </ul>
+          </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section">
+      <h2 class="glitch-title">Learning Path</h2>
+      <div class="skills-container">
+          <div class="skill-category">
+              <h3>Current Skills</h3>
+              <div class="skill-item">
+                  <div class="skill-header">
+                      <span>Python Basics</span>
+                      <span class="skill-percentage">75%</span>
+                  </div>
+                  <div class="skill-bar">
+                      <div class="skill-fill" style="--fill: 75%"></div>
+                  </div>
+              </div>
+              <div class="skill-item">
+                  <div class="skill-header">
+                      <span>Web Security Basics</span>
+                      <span class="skill-percentage">60%</span>
+                  </div>
+                  <div class="skill-bar">
+                      <div class="skill-fill" style="--fill: 60%"></div>
+                  </div>
+              </div>
+              <div class="skill-item">
+                  <div class="skill-header">
+                      <span>CTF Challenges</span>
+                      <span class="skill-percentage">45%</span>
+                  </div>
+                  <div class="skill-bar">
+                      <div class="skill-fill" style="--fill: 45%"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <h2 class="glitch-text" data-text="Projects">Learning Projects</h2>
+      <div class="projects-grid">
+          <div class="project-card">
+              <div class="project-content">
+                  <h3>Password Strength Checker</h3>
+                  <p>My first Python tool to check password security</p>
+                  <div class="project-tech">
+                      <span>Python</span>
+                      <span>Security</span>
+                  </div>
+                  <div class="project-links">
+                      <a href="https://github.com/HexSecGuru" target="_blank">View Code</a>
+                  </div>
+              </div>
+          </div>
+          <div class="project-card">
+              <div class="project-content">
+                  <h3>CTF Writeups</h3>
+                  <p>Documentation of my journey solving beginner CTF challenges</p>
+                  <div class="project-tech">
+                      <span>Security</span>
+                      <span>Learning</span>
+                  </div>
+                  <div class="project-links">
+                      <a href="https://github.com/HexSecGuru" target="_blank">View Notes</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <section id="terminal" class="section">
+      <h2 class="glitch-text" data-text="Terminal">Interactive Terminal</h2>
+      <div class="terminal">
+          <div class="terminal-header">
+              <div class="terminal-buttons">
+                  <div class="terminal-button"></div>
+                  <div class="terminal-button"></div>
+                  <div class="terminal-button"></div>
+              </div>
+              <div class="terminal-title">hexsec@terminal:~$</div>
+          </div>
+          <div class="terminal-content" id="terminal-content"></div>
+          <div class="terminal-input-line">
+              <span class="prompt">$</span>
+              <input type="text" class="terminal-input" id="terminal-input" autofocus>
+          </div>
+      </div>
+    </section>
+
+    <section id="progress" class="section">
+      <h2 class="glitch-title">Learning Timeline</h2>
+      <div class="timeline">
+          <div class="timeline-item">
+              <div class="timeline-content">
+                  <h3>Getting Started</h3>
+                  <p>Started learning Python basics</p>
+                  <span class="date">Day 1</span>
+              </div>
+          </div>
+          <div class="timeline-item">
+              <div class="timeline-content">
+                  <h3>First Tool</h3>
+                  <p>Created password strength checker</p>
+                  <span class="date">Day 15</span>
+              </div>
+          </div>
+          <div class="timeline-item">
+              <div class="timeline-content">
+                  <h3>Current</h3>
+                  <p>Learning network security basics</p>
+                  <span class="date">Day 30</span>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2 class="glitch-text">Secure Channel</h2>
+      <div class="contact-container">
+          <form id="contact-form" class="contact-form" onsubmit="return false;">
+              <div class="form-group">
+                  <input type="text" id="name" required>
+                  <label for="name">Codename</label>
+              </div>
+              <div class="form-group">
+                  <input type="email" id="email" required>
+                  <label for="email">Secure Email</label>
+              </div>
+              <div class="form-group">
+                  <textarea id="message" required></textarea>
+                  <label for="message">Encrypted Message</label>
+              </div>
+              <button type="submit" class="submit-btn">
+                  <span class="btn-text">Transmit</span>
+                  <span class="btn-icon">⚡</span>
+              </button>
+          </form>
+      </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>HexSec Terminal</h3>
+                <p>Advancing Cybersecurity Through Innovation</p>
+            </div>
+            <div class="footer-section">
+                <h3>Secure Channels</h3>
+                <div class="social-links">
+                    <a href="https://github.com/HexSecGuru" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 HexSec Terminal. Secured by Design.</p>
+        </div>
+    </footer>
+  </div>
+
+  <div class="github-popup" id="githubPopup">
+    <div class="popup-content">
+        <p>Want to see more?</p>
+        <button class="github-btn" id="githubButton">
+            <span class="btn-text">View GitHub Profile</span>
+            <span class="btn-icon">→</span>
+        </button>
+    </div>
+  </div>
+
+  <script>
+    // Enhanced Matrix Effect
+    const canvas = document.getElementById('matrix-background');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+    const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const nums = '0123456789';
+    const alphabet = katakana + latin + nums;
+
+    const fontSize = 16;
+    const columns = canvas.width/fontSize;
+    const rainDrops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#33FF33';
+      ctx.font = fontSize + 'px monospace';
+
+      for(let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+        ctx.fillText(text, i*fontSize, rainDrops[i]*fontSize);
+        
+        if(rainDrops[i]*fontSize > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    }
+
+    setInterval(draw, 30);
+
+    // Smooth Scrolling
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Terminal functionality
+    const terminalCommands = {
+        help: 'Available commands: help, about, progress, projects, stats, skills, clear',
+        about: 'Hi! I\'m a 16-year-old aspiring cybersecurity enthusiast. Currently learning programming and security basics.',
+        progress: [
+            'Learning Progress:',
+            '- Started Python Programming',
+            '- Learning Basic Network Security',
+            '- Reading About Web Security',
+            '- Working on Small Security Tools'
+        ].join('\n'),
+        projects: [
+            'Current Projects:',
+            '- Password Strength Checker (Python)',
+            '- Basic Port Scanner (Python)',
+            '- Security Notes Collection',
+            'View all at: https://github.com/HexSecGuru'
+        ].join('\n'),
+        stats: [
+            'Learning Statistics:',
+            '- Python Projects: 5',
+            '- Days Learning: 30',
+            '- Hours Practiced: 120'
+        ].join('\n'),
+        skills: [
+            'Current Skills:',
+            '- Python: Basic Programs',
+            '- Linux: Basic Commands',
+            '- Web: HTML & CSS',
+            '- Security: Learning Fundamentals'
+        ].join('\n'),
+        clear: function() {
+            document.getElementById('terminal-content').innerHTML = '';
+            return '';
+        }
+    };
+
+    function sanitizeInput(input) {
+        const div = document.createElement('div');
+        div.textContent = input;
+        return div.innerHTML;
+    }
+
+    function processCommand(command) {
+        // Sanitize input
+        command = sanitizeInput(command).toLowerCase().trim();
+        
+        // Rate limiting
+        if (!this.lastCommand) {
+            this.lastCommand = Date.now();
+        } else {
+            const now = Date.now();
+            if (now - this.lastCommand < 100) { // 100ms cooldown
+                return 'Please wait before entering another command.';
+            }
+            this.lastCommand = now;
+        }
+
+        if (command in terminalCommands) {
+            return typeof terminalCommands[command] === 'function' 
+                ? terminalCommands[command]() 
+                : terminalCommands[command];
+        }
+        return `Command not found: ${command}. Type 'help' for available commands.`;
+    }
+
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalContent = document.getElementById('terminal-content');
+
+    terminalInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const command = this.value.toLowerCase().trim();
+            const output = processCommand(command);
+            
+            addToTerminal(`$ ${command}`);
+            addToTerminal(output);
+            
+            this.value = '';
+            scrollToBottom();
+        }
+    });
+
+    function addToTerminal(text) {
+        const line = document.createElement('div');
+        line.textContent = text;
+        line.className = 'terminal-line';
+        terminalContent.appendChild(line);
+    }
+
+    function scrollToBottom() {
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+    }
+
+    // Initialize terminal
+    addToTerminal('Welcome to HexSec Terminal. Type "help" for available commands.');
+
+    // Replace the existing GitHub popup JavaScript with this
+    document.addEventListener('DOMContentLoaded', function() {
+        handleGitHubRedirection();
+
+        const githubPopup = document.getElementById('githubPopup');
+        const githubButton = document.getElementById('githubButton');
+        let hasShown = false;
+
+        // Create page transition element
+        const pageTransition = document.createElement('div');
+        pageTransition.className = 'page-transition';
+        document.body.appendChild(pageTransition);
+
+        // Show popup after scrolling 60% of the page
+        window.addEventListener('scroll', function() {
+            if (!hasShown) {
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                if (scrollPercent > 60) {
+                    showPopup();
+                }
+            }
+        });
+
+        // Show popup after 30 seconds if not shown already
+        setTimeout(() => {
+            if (!hasShown) {
+                showPopup();
+            }
+        }, 30000);
+
+        function showPopup() {
+            hasShown = true;
+            githubPopup.classList.add('show');
+        }
+
+        // Handle GitHub button click with animation
+        githubButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Create loading text
+            const loadingText = document.createElement('div');
+            loadingText.className = 'loading-text';
+            loadingText.textContent = 'Redirecting to GitHub...';
+            document.body.appendChild(loadingText);
+            
+            // Store that we're going to GitHub profile
+            sessionStorage.setItem('goingToGitHub', 'true');
+            
+            // Add fade-out animation
+            document.body.style.animation = 'fadeOutScale 0.5s ease forwards';
+            
+            // Redirect to GitHub profile
+            setTimeout(() => {
+                window.location.href = 'https://github.com/HexSecGuru';
+            }, 1500);
+        });
+
+        // Hide popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (hasShown && !githubPopup.contains(e.target)) {
+                githubPopup.classList.add('fade-out');
+                setTimeout(() => {
+                    githubPopup.remove();
+                }, 1000);
+            }
+        });
+
+        const loadingScreen = document.getElementById('loadingScreen');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+
+        // Hide welcome screen initially
+        welcomeScreen.style.display = 'none';
+
+        // Remove loading screen after animation
+        setTimeout(() => {
+            loadingScreen.classList.add('fade-out');
+            setTimeout(() => {
+                loadingScreen.remove();
+                welcomeScreen.style.display = 'flex';
+            }, 500);
+        }, 3000);
+
+        // GitHub popup handler
+        githubButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Create loading text
+            const loadingText = document.createElement('div');
+            loadingText.className = 'loading-text';
+            loadingText.textContent = 'Redirecting to GitHub...';
+            document.body.appendChild(loadingText);
+            
+            // Add fade-out animation to current content
+            document.body.style.animation = 'fadeOutScale 0.5s ease forwards';
+            
+            // Wait for animation and redirect
+            setTimeout(() => {
+                window.location.href = 'https://github.com/HexSecGuru';
+            }, 1500);
+        });
+    });
+
+    document.getElementById('enterButton').addEventListener('click', function() {
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const mainContent = document.getElementById('mainContent');
+        
+        welcomeScreen.style.animation = 'fadeOut 1s ease forwards';
+        setTimeout(() => {
+            welcomeScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            mainContent.style.animation = 'fadeIn 1s ease forwards';
+        }, 1000);
+    });
+
+    function handleGitHubRedirection() {
+        // Check if coming from GitHub profile
+        if (document.referrer.includes('github.com/HexSecGuru')) {
+            // Show portfolio directly
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'block';
+        }
+    }
+  </script>
+</body>
+</html>
